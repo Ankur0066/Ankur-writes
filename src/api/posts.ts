@@ -1,6 +1,6 @@
 import type { Story, StoryListItem } from '../types/story'
 
-const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'https://blog-backend-ankur.vercel.app/api').replace(/\/$/, '')
+const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'https://ankur-blog-backend.vercel.app/api').replace(/\/$/, '')
 
 type BackendPost = {
   id: number
