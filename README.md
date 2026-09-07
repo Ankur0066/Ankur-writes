@@ -1,75 +1,103 @@
-# React + TypeScript + Vite
+# Ankur Writes
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Ankur Writes** is my personal technical blog where I share my learnings, experiences, projects, and insights from software development.
 
-Currently, two official plugins are available:
+The goal is to document my developer journey while writing about technologies, concepts, practical implementations, and lessons learned along the way.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🚀 Tech Stack
 
-## React Compiler
+* **React** — Frontend library
+* **TypeScript** — Type-safe development
+* **Vite** — Development and build tooling
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## ✨ Features
 
-## Expanding the ESLint configuration
+* Technical blog posts
+* Clean and responsive interface
+* Developer-focused content
+* Fast development experience with Vite
+* Type-safe frontend with TypeScript
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 📁 Project Structure
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```text
+ankur-writes/
+├── public/
+├── src/
+│   ├── components/
+│   ├── pages/
+│   ├── assets/
+│   └── ...
+├── package.json
+├── tsconfig.json
+└── vite.config.ts
 ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+## 🛠️ Getting Started
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### Prerequisites
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+Make sure you have **Node.js** and **npm** installed.
 
+### Installation
+
+Clone the repository:
+
+```bash
+git clone <repository-url>
+cd ankur-writes
 ```
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+### Run the development server
+
+```bash
+npm run dev
+```
+
+The application will be available at the local URL shown in your terminal.
+
+### Build for production
+
+```bash
+npm run build
+```
+
+### Preview the production build
+
+```bash
+npm run preview
+```
+
+## 📝 About the Blog
+
+I use this space to write about topics such as:
+
+* Software Development
+* Backend Development
+* Frontend Development
+* Databases & SQL
+* System Design
+* DevOps & Cloud
+* Programming Concepts
+* Projects & Practical Learnings
+* Developer Experiences
+
+## 📌 Status
+
+This project is actively being developed and will evolve as I continue building and improving **Ankur Writes**.
+
+## 👨‍💻 Author
+
+**Ankur Tiwari**
+
+A developer sharing knowledge, experiments, and lessons learned through building software.
+
+---
+
+> **Learn. Build. Write. Repeat.**
