@@ -1,5 +1,6 @@
 const mysql = require('mysql2/promise');
 const fs = require('fs');
+const connectionUrl = process.env.DATABASE_URL;
 
 // Support optional SSL settings for cloud providers (e.g., Aiven)
 const useSsl = (process.env.DB_SSL && (process.env.DB_SSL === 'true' || process.env.DB_SSL === 'REQUIRED')) || false;
@@ -29,12 +30,25 @@ if (useSsl) {
   }
 }
 
+const databaseConfig = connectionUrl ? (() => {
+  const parsed = new URL(connectionUrl);
+  return {
+    host: parsed.hostname,
+    port: parsed.port ? Number(parsed.port) : 3306,
+    user: decodeURIComponent(parsed.username),
+    password: decodeURIComponent(parsed.password),
+    database: parsed.pathname.replace(/^\//, ''),
+  };
+})() : {
+    host: process.env.DB_HOST || '127.0.0.1',
+    port: process.env.DB_PORT ? parseInt(process.env.DB_PORT, 10) : 3306,
+    user: process.env.DB_USER || 'root',
+    password: process.env.DB_PASS || '',
+    database: process.env.DB_NAME || 'blog_db',
+  };
+
 const pool = mysql.createPool({
-  host: process.env.DB_HOST || '127.0.0.1',
-  port: process.env.DB_PORT ? parseInt(process.env.DB_PORT, 10) : 3306,
-  user: process.env.DB_USER || 'root',
-  password: process.env.DB_PASS || '',
-  database: process.env.DB_NAME || 'blog_db',
+  ...databaseConfig,
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
