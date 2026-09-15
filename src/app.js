@@ -7,7 +7,7 @@ const initAdmin = require('./initAdmin');
 const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 const errorHandler = require('./middleware/errorHandler');
-
+const db = require('./db');
 const app = express();
 
 app.use(helmet());
