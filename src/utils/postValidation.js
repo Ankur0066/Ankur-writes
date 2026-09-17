@@ -7,6 +7,17 @@ function validatePostInput(body, { partial = false } = {}) {
     if (typeof body.title !== 'string' || body.title.trim().length < 3 || body.title.trim().length > 255) errors.push('title must be between 3 and 255 characters');
   }
   if (body.summary !== undefined && body.summary !== null && (typeof body.summary !== 'string' || body.summary.length > 1024)) errors.push('summary must be at most 1024 characters');
+  if (body.image_url !== undefined && body.image_url !== null) {
+    if (typeof body.image_url !== 'string' || body.image_url.length > 2048) errors.push('image_url must be a valid HTTP or HTTPS URL');
+    else {
+      try {
+        const imageUrl = new URL(body.image_url);
+        if (!['http:', 'https:'].includes(imageUrl.protocol)) errors.push('image_url must be a valid HTTP or HTTPS URL');
+      } catch {
+        errors.push('image_url must be a valid HTTP or HTTPS URL');
+      }
+    }
+  }
   if (body.status !== undefined && !allowedStatuses.has(body.status)) errors.push('status must be draft or published');
   if (body.publish_at !== undefined && body.publish_at !== null && Number.isNaN(Date.parse(body.publish_at))) errors.push('publish_at must be a valid date');
   if (body.blocks !== undefined) {

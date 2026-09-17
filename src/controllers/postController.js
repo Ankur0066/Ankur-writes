@@ -24,6 +24,7 @@ function formatPost(post, blocks = [], tags = []) {
     title: post.title,
     slug: post.slug,
     summary: post.summary || '',
+    imageUrl: post.image_url || null,
     status: post.status,
     publishedAt: post.publish_at || post.created_at,
     readingTime: post.reading_time || 5,
@@ -41,7 +42,7 @@ function formatPost(post, blocks = [], tags = []) {
 async function getPostRowBySlug(slug, includeDrafts = false) {
   const statusClause = includeDrafts ? '' : "AND p.status = 'published' AND (p.publish_at IS NULL OR p.publish_at <= NOW())";
   const rows = await query(
-    `SELECT p.id, p.title, p.slug, p.summary, p.body_markdown, p.status, p.publish_at, p.created_at, p.reading_time,
+    `SELECT p.id, p.title, p.slug, p.summary, p.image_url, p.body_markdown, p.status, p.publish_at, p.created_at, p.reading_time,
       c.name AS category_name, c.slug AS category_slug,
       u.name AS author_name, u.email AS author_email
      FROM posts p
@@ -84,7 +85,7 @@ async function list(req, res) {
   }
   const where = filters.join(' AND ');
   const [rows, countRows] = await Promise.all([
-    query(`SELECT p.id, p.title, p.slug, p.summary, p.publish_at, p.created_at, p.reading_time,
+    query(`SELECT p.id, p.title, p.slug, p.summary, p.image_url, p.publish_at, p.created_at, p.reading_time,
       c.name AS category_name, c.slug AS category_slug, u.name AS author_name
       FROM posts p LEFT JOIN categories c ON c.id = p.category_id LEFT JOIN users u ON u.id = p.author_id
       WHERE ${where} ORDER BY COALESCE(p.publish_at, p.created_at) DESC LIMIT ? OFFSET ?`, [...params, limit, offset]),
@@ -157,13 +158,13 @@ async function syncBlocks(connection, postId, blocks) {
 async function create(req, res) {
   const errors = validatePostInput(req.body);
   if (errors.length) throw httpError(400, 'VALIDATION_ERROR', errors.join('; '));
-  const { title, body_markdown, summary, status = 'draft', publish_at = null, blocks, tags, category, reading_time } = req.body;
+  const { title, body_markdown, summary, image_url = null, status = 'draft', publish_at = null, blocks, tags, category, reading_time } = req.body;
   const slug = await uniqueSlug(title);
   const post = await withTransaction(async (connection) => {
     const categoryId = await findOrCreateCategory(connection, category);
     const [result] = await connection.execute(
-      'INSERT INTO posts (author_id, title, slug, body_markdown, summary, category_id, reading_time, status, publish_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-      [req.user.id, title.trim(), slug, body_markdown || null, summary || null, categoryId, reading_time || null, status, publish_at || null],
+      'INSERT INTO posts (author_id, title, slug, body_markdown, summary, image_url, category_id, reading_time, status, publish_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      [req.user.id, title.trim(), slug, body_markdown || null, summary || null, image_url || null, categoryId, reading_time || null, status, publish_at || null],
     );
     await syncBlocks(connection, result.insertId, blocks);
     await syncTags(connection, result.insertId, tags);
@@ -179,16 +180,16 @@ async function update(req, res) {
   if (!id) throw httpError(400, 'INVALID_POST_ID', 'Post id must be a positive integer');
   const existing = await query('SELECT id, title FROM posts WHERE id = ?', [id]);
   if (!existing.length) throw httpError(404, 'POST_NOT_FOUND', 'Story not found');
-  const { title, body_markdown, summary, status, publish_at, blocks, tags, category, reading_time } = req.body;
+  const { title, body_markdown, summary, image_url, status, publish_at, blocks, tags, category, reading_time } = req.body;
   const slug = title ? await uniqueSlug(title, id) : null;
   let updatedSlug = slug;
   await withTransaction(async (connection) => {
     const categoryId = category === undefined ? null : await findOrCreateCategory(connection, category);
     await connection.execute(
       `UPDATE posts SET title = COALESCE(?, title), slug = COALESCE(?, slug), body_markdown = COALESCE(?, body_markdown),
-       summary = COALESCE(?, summary), category_id = COALESCE(?, category_id), reading_time = COALESCE(?, reading_time),
+       summary = COALESCE(?, summary), image_url = COALESCE(?, image_url), category_id = COALESCE(?, category_id), reading_time = COALESCE(?, reading_time),
        status = COALESCE(?, status), publish_at = COALESCE(?, publish_at), updated_at = NOW() WHERE id = ?`,
-      [title ?? null, slug, body_markdown ?? null, summary ?? null, categoryId, reading_time ?? null, status ?? null, publish_at ?? null, id],
+      [title ?? null, slug, body_markdown ?? null, summary ?? null, image_url ?? null, categoryId, reading_time ?? null, status ?? null, publish_at ?? null, id],
     );
     await syncBlocks(connection, id, blocks);
     await syncTags(connection, id, tags);

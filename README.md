@@ -5,7 +5,7 @@ Quick start
 1. copy .env.example to .env and set values
 2. npm install
 3. Create DB and run SQL in sql/create_tables.sql
-4. If upgrading an existing database, run sql/migrations/001_story_content.sql once
+4. If upgrading an existing database, run sql/migrations/001_story_content.sql and sql/migrations/002_post_image_url.sql once
 5. npm run dev
 
 To load repeatable development content:
@@ -65,6 +65,7 @@ Admin post creation accepts a body like:
 {
   "title": "A software factory needs one sandbox per agent",
   "summary": "How isolated environments help agents work together.",
+  "image_url": "https://example.com/story-cover.jpg",
   "category": "Engineering",
   "tags": ["AI engineering", "Sandboxes"],
   "status": "draft",

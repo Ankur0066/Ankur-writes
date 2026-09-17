@@ -37,6 +37,7 @@ CREATE TABLE IF NOT EXISTS `posts` (
   `slug` VARCHAR(255) NOT NULL,
   `body_markdown` LONGTEXT,
   `summary` VARCHAR(1024) DEFAULT NULL,
+  `image_url` VARCHAR(2048) DEFAULT NULL,
   `category_id` BIGINT UNSIGNED DEFAULT NULL,
   `reading_time` SMALLINT UNSIGNED DEFAULT NULL,
   `status` ENUM('draft','published') DEFAULT 'published',
