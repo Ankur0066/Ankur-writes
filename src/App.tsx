@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import './App.css'
 import StoryPage from './StoryPage'
+import AllPostsPage from './AllPostsPage'
 import { fetchStories } from './api/posts'
 import type { StoryListItem } from './types/story'
 
@@ -70,7 +71,7 @@ function HomePage() {
           <span /><span />
         </button>
         <nav className={menuOpen ? 'main-nav is-open' : 'main-nav'} aria-label="Main navigation">
-          <a href="#stories" onClick={() => setMenuOpen(false)}>Stories</a>
+          <a href="/allpost" onClick={() => setMenuOpen(false)}>Stories</a>
           <a href="#topics" onClick={() => setMenuOpen(false)}>Topics</a>
           <a href="#about" onClick={() => setMenuOpen(false)}>About</a>
           <a className="nav-button" href="#newsletter" onClick={() => setMenuOpen(false)}>Join the list <ArrowIcon /></a>
@@ -85,7 +86,7 @@ function HomePage() {
         </section>
 
         <section className="featured" aria-labelledby="featured-title">
-          <div className="featured-art">
+          <div className="featured-art" style={featuredStory?.imageUrl ? { backgroundImage: `linear-gradient(180deg, rgba(25,48,40,.08), rgba(25,48,40,.35)), url(${featuredStory.imageUrl})`, backgroundSize: 'cover', backgroundPosition: 'center' } : undefined}>
             <div className="art-grid" />
             <div className="art-circle circle-one" />
             <div className="art-circle circle-two" />
@@ -115,7 +116,7 @@ function HomePage() {
           <div className="article-grid">
             {filteredArticles.map((story, index) => (
               <a className="article-card" href={`/stories/${story.slug}`} key={story.slug}>
-                <div className={`article-image ${accents[index % accents.length]}`}><span>{story.category.name}</span></div>
+                <div className={`article-image ${accents[index % accents.length]}`} style={story.imageUrl ? { backgroundImage: `url(${story.imageUrl})` } : undefined}><span>{story.category.name}</span></div>
                 <div className="article-body"><div className="article-meta">{formatDate(story.publishedAt)} <span>·</span> {story.readingTime} min read</div><h3>{story.title}</h3><p>{story.summary}</p><div className="article-author"><span className={`avatar avatar-${accents[index % accents.length]}`}>{story.author.initials}</span><span>{story.author.name}</span><ArrowIcon /></div></div>
               </a>
             ))}
@@ -139,6 +140,7 @@ function HomePage() {
 }
 
 function App() {
+  if (window.location.pathname === '/allpost' || window.location.pathname === '/allpost/') return <AllPostsPage />
   const storyMatch = window.location.pathname.match(/^\/(?:story|stories\/([^/]+))\/?$/)
   return storyMatch ? <StoryPage slug={storyMatch[1] || 'software-factory-one-sandbox-per-agent'} /> : <HomePage />
 }

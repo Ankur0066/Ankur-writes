@@ -5,6 +5,7 @@ export const fallbackStory: Story = {
   title: 'A Software Factory Needs One Sandbox per Agent',
   slug: 'software-factory-one-sandbox-per-agent',
   summary: 'How isolated environments turn a group of AI agents into a reliable, scalable engineering team.',
+  imageUrl: null,
   category: { name: 'Engineering', slug: 'engineering' },
   author: { name: 'Ankur Kumar', initials: 'AK' },
   publishedAt: '2024-06-12T00:00:00.000Z',

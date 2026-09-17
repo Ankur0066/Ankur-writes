@@ -12,6 +12,7 @@ export type Story = {
   title: string
   slug: string
   summary: string
+  imageUrl: string | null
   category: { name: string; slug: string }
   author: { name: string; initials: string; avatarUrl?: string | null }
   publishedAt: string
@@ -20,7 +21,7 @@ export type Story = {
   blocks: StoryBlock[]
 }
 
-export type StoryListItem = Pick<Story, 'id' | 'title' | 'slug' | 'summary' | 'publishedAt' | 'readingTime'> & {
+export type StoryListItem = Pick<Story, 'id' | 'title' | 'slug' | 'summary' | 'imageUrl' | 'publishedAt' | 'readingTime'> & {
   category: Story['category']
   author: Story['author']
 }

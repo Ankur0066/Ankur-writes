@@ -1,12 +1,14 @@
 import type { Story, StoryListItem } from '../types/story'
 
-const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'https://ankur-blog-backend.vercel.app/api').replace(/\/$/, '')
+const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000/api').replace(/\/$/, '')
 
 type BackendPost = {
   id: number
   title: string
   slug: string
   summary?: string | null
+  image_url?: string | null
+  imageUrl?: string | null
   body_markdown?: string | null
   publish_at?: string | null
   publishedAt?: string | null
@@ -36,6 +38,7 @@ function toStory(post: BackendPost): Story {
     title: post.title,
     slug: post.slug,
     summary: post.summary || '',
+    imageUrl: post.imageUrl || post.image_url || null,
     category: post.category || { name: 'Engineering', slug: 'engineering' },
     author: post.author || { name: 'Ankur Writes', initials: 'AW' },
     publishedAt: post.publishedAt || post.publish_at || post.created_at || new Date().toISOString(),
@@ -57,6 +60,12 @@ export async function fetchStoryBySlug(slug: string, signal?: AbortSignal): Prom
 }
 
 export async function fetchStories(signal?: AbortSignal): Promise<StoryListItem[]> {
-  const response = await request<{ items: BackendPost[] }>('/posts', signal)
-  return response.items.map((post) => toStory(post))
+  const firstPage = await request<{ items: BackendPost[]; totalPages?: number }>('/posts?limit=50&page=1', signal)
+  const totalPages = firstPage.totalPages || 1
+  if (totalPages === 1) return firstPage.items.map((post) => toStory(post))
+
+  const remainingPages = await Promise.all(
+    Array.from({ length: totalPages - 1 }, (_, index) => request<{ items: BackendPost[] }>(`/posts?limit=50&page=${index + 2}`, signal)),
+  )
+  return [firstPage, ...remainingPages].flatMap((page) => page.items.map((post) => toStory(post)))
 }

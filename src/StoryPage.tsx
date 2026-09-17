@@ -43,6 +43,7 @@ function StoryView({ story }: { story: Story }) {
       </section>
       <div className="mx-auto grid max-w-6xl grid-cols-1 gap-12 px-5 pb-28 sm:px-8 lg:grid-cols-[minmax(0,700px)_190px] lg:justify-center lg:gap-16">
         <article className="min-w-0 text-[15px] leading-7 text-[#6f786f] [&_h2]:scroll-mt-28 [&_h2]:mt-14 [&_h2]:mb-4 [&_h2]:text-2xl [&_h2]:font-semibold [&_h2]:leading-tight [&_h2]:tracking-tight [&_h2]:text-[#172019] [&_h3]:scroll-mt-28 [&_h3]:mt-10 [&_h3]:mb-3 [&_h3]:text-lg [&_h3]:font-semibold [&_h3]:text-[#172019] [&_p]:mb-5 [&_strong]:font-medium [&_strong]:text-[#172019]">
+          {story.imageUrl && <img className="mb-10 max-h-[460px] w-full rounded-xl border border-[#dedfd8] object-cover" src={story.imageUrl} alt="" />}
           {story.blocks.map((block) => <StoryBlock block={block} key={block.id} />)}
           <div className="mt-14 flex flex-wrap gap-2 border-y border-[#dedfd8] py-7">{story.tags.map((tag) => <span className="rounded-full border border-[#c8cec5] px-3 py-1 font-mono text-[10px] text-[#6f786f]" key={tag}>{tag}</span>)}</div>
         </article>
